@@ -16,26 +16,27 @@ class PostsNotifier extends StateNotifier<List<Post>> {
   PostsNotifier(this.ref) : super([]);
 
   // Fetch all posts (GET request)
- Future<void> fetchPosts() async {
-  final client = ref.read(httpClientProvider);
-  try {
-    final response = await client.get(Uri.parse('${Constants.baseUrl}/posts'));
+  Future<void> fetchPosts() async {
+    final client = ref.read(httpClientProvider);
+    try {
+      final response =
+          await client.get(Uri.parse('${Constants.baseUrl}/posts'));
 
-    // Print out the status code and response body for debugging
-    print('Status Code: ${response.statusCode}');
-    print('Response Body: ${response.body}');
+      // Print out the status code and response body for debugging
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      state = data.map((json) => Post.fromJson(json)).toList();
-      print('Fetched ${state.length} posts');
-    } else {
-      throw Exception('Failed to load posts');
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        state = data.map((json) => Post.fromJson(json)).toList();
+        print('Fetched ${state.length} posts');
+      } else {
+        throw Exception('Failed to load posts');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
     }
-  } catch (e) {
-    print('Error occurred: $e');
   }
-}
 
   // Add a new post locally after successful POST request
   void addPost(Post newPost) {
@@ -57,7 +58,8 @@ class PostsNotifier extends StateNotifier<List<Post>> {
 }
 
 // Provider to post data (POST request)
-final postDataProvider = FutureProvider.family<Post, Post>((ref, newPost) async {
+final postDataProvider =
+    FutureProvider.family<Post, Post>((ref, newPost) async {
   final client = ref.read(httpClientProvider);
   final response = await client.post(
     Uri.parse('${Constants.baseUrl}/posts'),
@@ -77,7 +79,8 @@ final postDataProvider = FutureProvider.family<Post, Post>((ref, newPost) async 
 });
 
 // Provider to update a post (PUT request)
-final updatePostProvider = FutureProvider.family<Post, Post>((ref, updatedPost) async {
+final updatePostProvider =
+    FutureProvider.family<Post, Post>((ref, updatedPost) async {
   final client = ref.read(httpClientProvider);
   final response = await client.put(
     Uri.parse('${Constants.baseUrl}/posts/${updatedPost.id}'),
@@ -97,9 +100,11 @@ final updatePostProvider = FutureProvider.family<Post, Post>((ref, updatedPost) 
 });
 
 // Provider to delete a post (DELETE request)
-final deletePostProvider = FutureProvider.family<void, int>((ref, postId) async {
+final deletePostProvider =
+    FutureProvider.family<void, int>((ref, postId) async {
   final client = ref.read(httpClientProvider);
-  final response = await client.delete(Uri.parse('${Constants.baseUrl}/posts/$postId'));
+  final response =
+      await client.delete(Uri.parse('${Constants.baseUrl}/posts/$postId'));
 
   if (response.statusCode == 200) {
     // Simulate deleting the post locally
