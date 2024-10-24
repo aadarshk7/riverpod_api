@@ -17,7 +17,7 @@ class AddPostScreen extends ConsumerWidget {
           children: [
             TextField(
               controller: titleController,
-              decoration: InputDecoration(labelText: 'Title'),
+              decoration: const InputDecoration(labelText: 'Title'),
             ),
             TextField(
               controller: bodyController,
