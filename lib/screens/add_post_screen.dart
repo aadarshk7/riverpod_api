@@ -26,12 +26,18 @@ class AddPostScreen extends ConsumerWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                final newPost = Post(id: 0, title: titleController.text, body: bodyController.text);
+                final newPost = Post(
+                    id: 0,
+                    title: titleController.text,
+                    body: bodyController.text);
                 final result = await ref.read(postDataProvider(newPost).future);
 
                 if (result != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Post created!')));
-                  Navigator.pop(context);  // Return to the previous screen
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Post created!')));
+                  Navigator.pop(context);
+
+                  /// Return to the previous screen
                 }
               },
               child: Text('Submit'),
